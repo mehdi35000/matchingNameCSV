@@ -34,13 +34,16 @@ for index, row in df1.iterrows():
         # Récupérer les informations nécessaires
         matched_row = df2[df2['name'] == best_match].iloc[0]
 
-        # Utiliser le nom complet du df1 si la première lettre est une initiale
-        if len(matched_row['name'].split()) == 1 and len(display_name.split()) > 1:
-            first_name = ' '.join(display_name.split()[:-1])
-            last_name = display_name.split()[-1]
+        # Diviser le nom complet en mots
+        name_parts = matched_row['name'].split()
+
+        # Utiliser le prénom du df1 si le prénom est manquant dans le df2
+        if len(name_parts) == 1 or name_parts[0][-1] == '.':
+            first_name = display_name.split()[0]
+            last_name = ' '.join(display_name.split()[1:])
         else:
-            first_name = matched_row['name'].split()[0]
-            last_name = ' '.join(matched_row['name'].split()[1:])
+            first_name = name_parts[0]
+            last_name = ' '.join(name_parts[1:])
 
         df3 = df3._append({'First name': first_name,
                           'Last name': last_name,
